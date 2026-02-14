@@ -29,15 +29,17 @@ dependencies = [
     "ollama>=0.3.0",
     "rich>=13.0.0",
     "click>=8.0.0",
+    "jinja2>=3.0",
+    "markdown>=3.4",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "ruff"]
 
 [project.urls]
-Homepage = "https://github.com/YOUR_USERNAME/smart-diff"
-Repository = "https://github.com/YOUR_USERNAME/smart-diff"
-Issues = "https://github.com/YOUR_USERNAME/smart-diff/issues"
+Homepage = "https://github.com/uragrom/smart-diff"
+Repository = "https://github.com/uragrom/smart-diff"
+Issues = "https://github.com/uragrom/smart-diff/issues"
 
 [project.scripts]
 smart-diff = "smart_diff.cli:main"

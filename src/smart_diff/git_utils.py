@@ -9,6 +9,7 @@ from .config import IGNORED_PATTERNS, MAX_DIFF_CHARS, TAIL_CHARS
 
 class GitError(Exception):
     """Git command failed; output is not a valid diff."""
+
     def __init__(self, message: str, returncode: int = -1):
         self.returncode = returncode
         super().__init__(message)
@@ -136,3 +137,62 @@ def get_diff_for_llm(
     """Return filtered and optionally truncated diff for the LLM."""
     diff = get_diff(staged=staged, ref=ref, cwd=cwd)
     return truncate_diff(diff)
+
+
+def get_commit_info(ref: str, cwd: Path | None = None) -> dict | None:
+    """Get commit metadata for ref (hash, author, date, subject, body). Returns None on error."""
+    cwd = cwd or Path.cwd()
+    # %H hash, %an author, %ae email, %ai date ISO, %s subject, %b body
+    fmt = "%H%n%an%n%ae%n%ai%n%s%n%b"
+    stdout, stderr, code = _run_git(["log", "-1", f"--format={fmt}", ref], cwd=cwd)
+    if code != 0 or not stdout.strip():
+        return None
+    parts = stdout.strip().split("\n", 5)
+    if len(parts) < 5:
+        return None
+    return {
+        "hash": parts[0][:12],
+        "hash_full": parts[0],
+        "author": parts[1],
+        "email": parts[2],
+        "date": parts[3],
+        "subject": parts[4],
+        "body": parts[5] if len(parts) > 5 else "",
+    }
+
+
+def get_diff_numstat(
+    staged: bool = False,
+    ref: str | None = None,
+    cwd: Path | None = None,
+) -> list[dict]:
+    """Per-file stats: added/deleted lines. Returns list of {path, added, deleted} (filtered)."""
+    cwd = cwd or Path.cwd()
+    if ref:
+        stdout, stderr, code = _run_git(["show", ref, "--numstat", "--format="], cwd=cwd)
+    else:
+        args = ["diff", "--numstat"]
+        if staged:
+            args.append("--cached")
+        stdout, stderr, code = _run_git(args, cwd=cwd)
+    if code != 0:
+        return []
+    result = []
+    for line in stdout.strip().split("\n"):
+        if not line.strip():
+            continue
+        # numstat: "add\tdel\tpath" or "-\t-\tpath" for binary
+        parts = line.split("\t", 2)
+        if len(parts) != 3:
+            continue
+        add_s, del_s, path = parts
+        path = path.strip().replace("\\", "/")
+        if _should_ignore(path):
+            continue
+        try:
+            added = int(add_s) if add_s != "-" else 0
+            deleted = int(del_s) if del_s != "-" else 0
+        except ValueError:
+            continue
+        result.append({"path": path, "added": added, "deleted": deleted})
+    return result

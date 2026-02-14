@@ -7,14 +7,27 @@ on:
     branches: [main, master]
 
 jobs:
-  ruff:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Install ruff
+      - name: Install dependencies
         run: pip install ruff
       - name: Ruff check
         run: ruff check src
+      - name: Ruff format (check)
+        run: ruff format --check src
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install package
+        run: pip install .
+      - name: Run smart-diff --help
+        run: smart-diff --help

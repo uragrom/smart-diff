@@ -1,5 +1,8 @@
 # Smart Diff (Git Deep-Diff)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+
 **[Русский](README.ru.md)** | English
 
 A CLI that turns raw `git diff` into **plain-language summaries** using a local LLM (Ollama). Use it for quick code-review or to generate concrete commit messages.
@@ -19,15 +22,15 @@ A CLI that turns raw `git diff` into **plain-language summaries** using a local 
 From source:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/smart-diff.git
+git clone https://github.com/uragrom/smart-diff.git
 cd smart-diff
 pip install .
 ```
 
-From GitHub (replace `YOUR_USERNAME` with your GitHub username):
+From GitHub:
 
 ```bash
-pip install git+https://github.com/YOUR_USERNAME/smart-diff.git
+pip install git+https://github.com/uragrom/smart-diff.git
 ```
 
 ## Use as `git dd`
@@ -59,7 +62,10 @@ git dd -m deepseek-r1   # use a specific model
 | `smart-diff -l en` / `--lang ru` | Output/LLM language: `en`, `ru`, `auto` |
 | `smart-diff config set model <name>` | Set default model |
 | `smart-diff config set lang en\|ru\|auto` | Set default language |
-| `smart-diff config show` | Show current model, language, and config path |
+| `smart-diff config show` | Show current model, language, report theme, auto-open, config path |
+| `smart-diff config set report_theme dark\|light` | Report theme (default: dark) |
+| `smart-diff config set report_auto_open true\|false` | Open HTML report in browser after generation (default: true) |
+| `smart-diff --html report.html` | Write an HTML report (analysis, file stats, charts, full diff) |
 
 ## Features
 
@@ -68,6 +74,7 @@ git dd -m deepseek-r1   # use a specific model
 - **Default model & language** — `smart-diff config set model deepseek-r1`, `smart-diff config set lang ru`; view with `smart-diff config show`.
 - **Multiple models** — Default from config or `llama3`; e.g. `codestral` or `deepseek-r1` for code. List: `ollama list`.
 - **Language** — `-l en` / `-l ru` / `-l auto` (match code); affects CLI messages and LLM response language.
+- **HTML report** — `smart-diff --html report.html` generates a **single self-contained** HTML file (no CDN, no network needed when viewing): commit info, LLM analysis, file stats table, **Chart.js charts** (bar, doughnut, by extension, net change) with **load animations**. Works when opened as `file://` in any browser or Quick Look. The report opens in your browser automatically (disable: `smart-diff config set report_auto_open false`). In the terminal, the written path is a clickable link.
 - **Pre-commit hook** — Auto-fill commit message from staged diff:
 
 ```bash
@@ -99,7 +106,10 @@ Model: llama3. Analyzing changes...
 ```bash
 pip install -e ".[dev]"
 ruff check src
+ruff format src
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines and how to open PRs.
 
 ## License
 

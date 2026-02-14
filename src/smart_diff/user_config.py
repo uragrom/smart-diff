@@ -5,7 +5,8 @@ import os
 from pathlib import Path
 
 CONFIG_FILENAME = "config.json"
-CONFIG_KEYS = ("model", "lang")
+CONFIG_KEYS = ("model", "lang", "report_theme", "report_auto_open")
+
 
 # Default config dir: Windows = APPDATA/smart-diff, Unix = ~/.config/smart-diff
 def _config_dir() -> Path:
@@ -23,12 +24,17 @@ def get_config_path() -> Path:
 def load_config() -> dict:
     """Load config dict. Returns defaults for missing keys."""
     path = get_config_path()
-    defaults = {"model": None, "lang": "auto"}
+    defaults = {"model": None, "lang": "auto", "report_theme": "dark", "report_auto_open": True}
     if not path.exists():
         return defaults
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
-        return {k: data.get(k, defaults[k]) for k in CONFIG_KEYS}
+        out = {k: data.get(k, defaults[k]) for k in CONFIG_KEYS}
+        v = out.get("report_auto_open")
+        out["report_auto_open"] = (
+            v if isinstance(v, bool) else str(v).lower() in ("1", "true", "yes")
+        )
+        return out
     except (json.JSONDecodeError, OSError):
         return defaults
 

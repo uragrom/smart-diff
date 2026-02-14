@@ -17,6 +17,8 @@ MESSAGES = {
         "config_lang_set": "Default language set to: {lang}",
         "config_show": "model = {model}\nlang = {lang}",
         "config_path": "Config file: {path}",
+        "html_report_written": "HTML report written to {path}",
+        "html_report_written_prefix": "HTML report written to ",
     },
     "ru": {
         "error_prefix": "Ошибка:",
@@ -34,6 +36,8 @@ MESSAGES = {
         "config_lang_set": "Язык по умолчанию: {lang}",
         "config_show": "model = {model}\nlang = {lang}",
         "config_path": "Файл конфига: {path}",
+        "html_report_written": "HTML-отчёт записан в {path}",
+        "html_report_written_prefix": "HTML-отчёт записан в ",
     },
 }
 

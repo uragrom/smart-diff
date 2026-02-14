@@ -47,5 +47,11 @@ Thumbs.db
 # *.local
 # .env
 
+# Generated HTML reports (optional; remove if you want to track reports)
+report.html
+report_*.html
+out-report/
+smart-diff-out/
+
 # Plan / scratch (optional; remove if you want plan.md in repo)
 # plan.md
