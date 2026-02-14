@@ -1,0 +1,9 @@
+#!/bin/sh
+# Pre-commit hook: подставить сообщение коммита от Smart Diff.
+# Установка:
+#   cp hooks/prepare-commit-msg.example .git/hooks/prepare-commit-msg
+#   chmod +x .git/hooks/prepare-commit-msg
+# При git commit сообщение будет сгенерировано по staged diff (если есть изменения).
+
+# $1 — путь к файлу с сообщением коммита
+smart-diff --commit-msg --staged -o "$1" 2>/dev/null || true
