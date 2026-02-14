@@ -245,13 +245,6 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines and how to open PRs.
 
 ---
 
-## 📤 Publishing your fork on GitHub
-
-1. Create a new repository on GitHub.
-2. Replace `uragrom` with your GitHub username in this README, [README.ru.md](README.ru.md), and [pyproject.toml](pyproject.toml) (`[project.urls]`).
-3. Push your code and add a short description and topics (e.g. `git`, `ollama`, `cli`, `llm`, `code-review`) on the repo page.
-
----
 
 ## 📄 License
 
